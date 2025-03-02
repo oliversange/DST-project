@@ -100,9 +100,6 @@ class Test_transformer:
         ax.set_title("Lorenz Attractor")
         plt.show()
 
-    def compute_psd(self,):
-        pass
-
 if __name__=="__main__":
 
     # Initialize
@@ -120,3 +117,9 @@ if __name__=="__main__":
 
     # Plot
     test_model.plot_trajectories(ground_truth, prediction)
+
+    # Save trajectory
+    save_path_tr = 'trajectories/lorenz63_tr.npy'
+    save_path_gt = 'trajectories/lorenz63_gt.npy'
+    np.save(save_path_tr, prediction.numpy())
+    np.save(save_path_gt, ground_truth)
