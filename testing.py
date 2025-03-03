@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 import torch.nn as nn
 from tqdm import tqdm
 import utils
-from mpl_toolkits.mplot3d import Axes3D
 
 class Test_transformer:
 
-    def __init__(self, enc_seq_len, output_seq_len):
+    def __init__(self, enc_seq_len, output_seq_len, dimensions):
 
         self.model_input_len = (enc_seq_len+output_seq_len-1)
         self.enc_seq_len = enc_seq_len
         self.output_seq_len = output_seq_len
+        self.dimensions = dimensions
 
     def generate_initial_conidtion(self, data, warm_up_steps, max_offset=2000):
 
@@ -32,7 +32,7 @@ class Test_transformer:
         warm_up_steps = 512
         test_data = np.load(test_data_path)
         initial_condition, ground_truth = self.generate_initial_conidtion(data=test_data, warm_up_steps=warm_up_steps)
-        initial_input = torch.tensor(initial_condition.reshape(self.model_input_len, 1, 3))
+        initial_input = torch.tensor(initial_condition.reshape(self.model_input_len, 1, self.dimensions))
         T = np.shape(ground_truth)[0]
         print(f'T = {T}')
 
@@ -57,7 +57,7 @@ class Test_transformer:
                 forecast_window=T
             )
 
-        return ground_truth, np.reshape(prediction, (prediction.shape[0],3))
+        return ground_truth, np.reshape(prediction, (prediction.shape[0],self.dimensions))
 
     def inference(self, model: nn.Module, initial_input: torch.Tensor, forecast_window: int) -> torch.Tensor:
 
@@ -105,11 +105,12 @@ if __name__=="__main__":
     # Initialize
     enc_seq_len = 128
     output_seq_len = 32
-    test_model = Test_transformer(enc_seq_len, output_seq_len)
+    dimensions = 20
+    test_model = Test_transformer(enc_seq_len, output_seq_len, dimensions)
 
     # Inference
-    test_data_path = 'data/lorenz63_test.npy'
-    model_path = "saved_models/trained_63_model_new.pth"
+    test_data_path = 'data/lorenz96_test.npy'
+    model_path = "saved_models/trained_96_model.pth"
     ground_truth, prediction = test_model.generate_test_trajectory(test_data_path, model_path)
 
     print(f'ground truth shape: {ground_truth.shape}')
@@ -119,7 +120,7 @@ if __name__=="__main__":
     test_model.plot_trajectories(ground_truth, prediction)
 
     # Save trajectory
-    save_path_tr = 'trajectories/lorenz63_tr.npy'
-    save_path_gt = 'trajectories/lorenz63_gt.npy'
+    save_path_tr = 'trajectories/lorenz96_tr_plus.npy'
+    save_path_gt = 'trajectories/lorenz96_gt_plus.npy'
     np.save(save_path_tr, prediction.numpy())
     np.save(save_path_gt, ground_truth)
