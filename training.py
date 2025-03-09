@@ -95,4 +95,4 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch + 1} Loss: {epoch_loss / len(training_loader):.6f}")
 
-#torch.save(model, "saved_models/trained_63_model_new.pth")
+#torch.save(model, "saved_models/trained_63_model.pth")

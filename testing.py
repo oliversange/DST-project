@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
@@ -120,7 +119,7 @@ if __name__=="__main__":
     test_model.plot_trajectories(ground_truth, prediction)
 
     # Save trajectory
-    save_path_tr = 'trajectories/lorenz96_tr_plus.npy'
-    save_path_gt = 'trajectories/lorenz96_gt_plus.npy'
+    save_path_tr = 'trajectories/lorenz96_tr.npy'
+    save_path_gt = 'trajectories/lorenz96_gt.npy'
     np.save(save_path_tr, prediction.numpy())
     np.save(save_path_gt, ground_truth)
